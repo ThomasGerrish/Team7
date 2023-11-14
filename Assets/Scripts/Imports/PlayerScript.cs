@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -12,15 +13,26 @@ public class PlayerScript : MonoBehaviour
     bool shooting;
     float speed, speedUpTimer, speedUpTimerDef;
     public bool barrierUp;
+    public float lives, points;
+    TextMeshProUGUI Lives, Points;
+
     // Start is called before the first frame update
     void Start()
     {
         // Maximum movement x is 6.26772
+        Lives = GameObject.Find("Lives Text").GetComponent<TextMeshProUGUI>();
+        Points = GameObject.Find("Points Text").GetComponent<TextMeshProUGUI>();
+        lives = 3;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Scoreboard
+        Lives.text = "Lives: " + lives.ToString();
+        Points.text = "Points: " + Points.ToString();
+
+
         // Speed Powerup
         speedUpTimer -= Time.deltaTime;
         if (speedUpTimer > 0) speed = 7.5f;
@@ -70,6 +82,12 @@ public class PlayerScript : MonoBehaviour
             barrierUp = true;
             GetComponent<BarrierScript>().Damage();
         }
+    }
+
+
+    public void PointsUp()
+    {
+        points++;
     }
 
     public void BulletHit()

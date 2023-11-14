@@ -38,6 +38,7 @@ public class BulletScript : MonoBehaviour
                 gameObject.GetComponent<BoxCollider2D>().enabled = false;
                 other.gameObject.GetComponent<GeneralEnemyScript>().Damage();
                 Player.GetComponent<PlayerScript>().BulletHit();
+                Player.GetComponent<PlayerScript>().PointsUp();
                 hit = true;
             }
             if (other.gameObject.tag == "Barrier")
