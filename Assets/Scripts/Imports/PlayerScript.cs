@@ -30,7 +30,7 @@ public class PlayerScript : MonoBehaviour
     {
         // Scoreboard
         Lives.text = "Lives: " + lives.ToString();
-        Points.text = "Points: " + Points.ToString();
+        Points.text = "Points: " + points.ToString();
 
 
         // Speed Powerup
