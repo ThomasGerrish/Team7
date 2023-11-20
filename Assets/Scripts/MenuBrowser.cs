@@ -18,10 +18,12 @@ public class MenuBrowser : MonoBehaviour
     }
     public void LoadArcade()
     {
-        SceneManager.LoadScene("Arcade Mode");
+        //SceneManager.LoadScene("Arcade Mode");
+        SceneManager.LoadScene("SampleScene");
     }
     public void LoadEndless()
     {
-        SceneManager.LoadScene("Endless Mode");
+        //SceneManager.LoadScene("Endless Mode");
+        SceneManager.LoadScene("SampleScene");
     }
 }
