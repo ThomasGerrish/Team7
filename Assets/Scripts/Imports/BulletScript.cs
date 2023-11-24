@@ -7,6 +7,7 @@ public class BulletScript : MonoBehaviour
     public GameObject Player, Gun;
     float speed = 8;
     bool hit;
+
     // Start is called before the first frame update
     void Start()
     {

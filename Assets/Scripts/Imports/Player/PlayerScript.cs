@@ -8,13 +8,15 @@ public class PlayerScript : MonoBehaviour
     public float defSpeed = 5;
     public bool canShoot = true;
     public int bulletCycle = 1;
-    public GameObject Bullet1, Bullet2, Bullet3;
+    //public GameObject Bullet1, Bullet2, Bullet3;
     public float movement;
-    bool shooting;
+    //bool shooting;
     float speed, speedUpTimer, speedUpTimerDef;
     public bool barrierUp;
     public float lives, points;
     TextMeshProUGUI Lives, Points;
+
+    [SerializeField]PlayerProjectile myprojectile;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +49,7 @@ public class PlayerScript : MonoBehaviour
         if (transform.position.x <= -6.26772f) transform.position = new Vector2(-6.26772f, transform.position.y);
 
         // Shooting
+        /*
         if (Input.GetKey(KeyCode.Space)) shooting = true;
         else shooting = false;
         if (shooting && canShoot)
@@ -67,6 +70,16 @@ public class PlayerScript : MonoBehaviour
             {
                 Bullet3.GetComponent<BulletScript>().ShootTrigger();
                 bulletCycle = 1;
+            }
+        }
+        */
+
+        //Refactored shooting
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if(myprojectile.bulletActive == false)
+            {
+                myprojectile.ShootProjectile();
             }
         }
     }
