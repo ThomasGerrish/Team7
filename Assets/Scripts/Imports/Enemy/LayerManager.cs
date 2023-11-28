@@ -5,16 +5,20 @@ using UnityEngine;
 public class LayerManager : MonoBehaviour
 {
     public List<GameObject> Enemies;
+    [SerializeField] List<int> activeEnemyIndex;
+    [SerializeField] List<Sprite> EnemySprites;
     public List<ShooterProjectile> Projectiles;
+    public bool layerActive;
+
+    [Header("Level Management")]
+    public int activeEnemies;
     public int maxBulletCount;
     public int bulletCount;
+    [SerializeField] WaveController myController;
+
     // Start is called before the first frame update
     void Start()
     {
-        if(Projectiles.Count != 0)
-        {
-            StartCoroutine(ShootingTimer());
-        }
 
     }
 
@@ -27,22 +31,33 @@ public class LayerManager : MonoBehaviour
     {
         foreach (var enemy in Enemies)
         {
-            enemy.gameObject.GetComponent<EnemyScript>().TurnAround(false);
+            enemy.GetComponent<EnemyScript>().TurnAround(false);
         }
     }
-
     IEnumerator ShootingTimer()
     {
-        while (true)
+        while (activeEnemies != 0)
         {
             float nextFire = Random.Range(0f, 5f);
             yield return new WaitForSeconds(nextFire);
             if (bulletCount < maxBulletCount)
             {
-                Debug.Log(Enemies.Count);
-                int chosenEnemy = Random.Range(0, Enemies.Count - 1);
-                int chosenShooter;
+                //Search for active enemies and choose one
                 int i = 0;
+                foreach(var enemy in Enemies)
+                {
+                    if (!enemy.GetComponent<EnemyScript>().alive)
+                    {
+                        activeEnemyIndex.Remove(i);
+                    }
+                    i++;
+                }
+                int chosenEnemy = Random.Range(0, activeEnemyIndex.Count - 1);
+
+
+                //Search for available shooter
+                int chosenShooter;
+                i = 0;
                 foreach(var shooter in Projectiles)
                 {
                     if (!shooter.bulletActive)
@@ -56,6 +71,33 @@ public class LayerManager : MonoBehaviour
                 bulletCount++;
             }
         }
+    }
+    public void ClearLayer()
+    {
+        layerActive = false;
+        myController.CheckForEnd();
+    }
+    public void Reload()
+    {
+        /*
+        foreach(var enemy in Enemies)
+        {
+            enemy.GetComponent<EnemyScript>().SpawnMe(EnemySprites[0], 4f);
+            activeEnemies++;
+        }
+        */
+        activeEnemies = 9;
+        activeEnemyIndex.Clear();
+        for (int i = 0; i < 10; i++)
+        {
+            activeEnemyIndex.Add(i);
+        }
+        layerActive = true;
+        StartCoroutine(ShootingTimer());
+    }
+    public void SpawnEnemy(int slot, int sprite, float speed)
+    {
+        Enemies[slot].GetComponent<EnemyScript>().SpawnMe(EnemySprites[sprite], speed);
     }
 }
 
