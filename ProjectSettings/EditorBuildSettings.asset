@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Endless Mode.unity
     guid: cb45330674f1510468b791b4e36b5d84
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 596b435ae084598479f0e4c2df9e8d3d
   m_configObjects: {}
