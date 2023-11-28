@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Barrier
   - Projectile
+  - E_Projectile
   layers:
   - Default
   - TransparentFX

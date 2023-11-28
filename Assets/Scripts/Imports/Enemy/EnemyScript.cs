@@ -8,6 +8,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] float HP;
     [SerializeField] float moveSpeed;
     [SerializeField] float scorePoints;
+    [SerializeField] LayerManager myManager;
 
     [Header("Custom properties")]
     public bool itemDrop;
@@ -49,9 +50,22 @@ public class EnemyScript : MonoBehaviour
     {
         if(collision.gameObject.tag == "Projectile")
         {
-            PlayerProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<PlayerProjectile>();
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
             OnDamage(hitprojectile.damage);
-            hitprojectile.bulletActive = false;
+            hitprojectile.DisableBullet();
+        }
+    }
+    IEnumerator ShootingTimer()
+    {
+        while (true)
+        {
+            float nextFire = Random.Range(0f, 5f);
+            yield return new WaitForSeconds(nextFire);
+            if (myManager.bulletCount <= myManager.maxBulletCount)
+            {
+                //firebullet
+                myManager.bulletCount++;
+            }
         }
     }
 }

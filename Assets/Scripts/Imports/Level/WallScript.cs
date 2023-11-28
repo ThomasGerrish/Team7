@@ -20,12 +20,18 @@ public class WallScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Projectile")
         {
-            PlayerProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<PlayerProjectile>();
-            hitprojectile.bulletActive = false;
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            hitprojectile.DisableBullet();
+        }
+        if (collision.gameObject.tag == "E_Projectile")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            hitprojectile.DisableBullet();
+            Debug.Log("EnemyBullet");
         }
         if (collision.gameObject.tag == "Enemy")
         {
-            Debug.Log("Enemycontact");
+            //Debug.Log("Enemycontact");
             collision.gameObject.transform.parent.gameObject.GetComponent<LayerManager>().TurnLayer();
         }
     }

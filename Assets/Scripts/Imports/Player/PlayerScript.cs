@@ -16,7 +16,7 @@ public class PlayerScript : MonoBehaviour
     public float lives, points;
     TextMeshProUGUI Lives, Points;
 
-    [SerializeField]PlayerProjectile myprojectile;
+    [SerializeField]ShooterProjectile myprojectile;
 
     // Start is called before the first frame update
     void Start()
@@ -79,7 +79,7 @@ public class PlayerScript : MonoBehaviour
         {
             if(myprojectile.bulletActive == false)
             {
-                myprojectile.ShootProjectile();
+                myprojectile.ShootProjectile(gameObject, 4f);
             }
         }
     }
