@@ -9,6 +9,8 @@ TagManager:
   - Barrier
   - Projectile
   - E_Projectile
+  - Explosive
+  - Exploded
   layers:
   - Default
   - TransparentFX

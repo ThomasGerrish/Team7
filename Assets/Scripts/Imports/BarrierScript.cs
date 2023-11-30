@@ -20,10 +20,35 @@ public class BarrierScript : MonoBehaviour
             
         }
     }
-
-    public void Damage()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        health--;
+        if (collision.gameObject.tag == "Projectile")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            Damage(hitprojectile.damage);
+            hitprojectile.DisableBullet();
+        }
+        else if (collision.gameObject.tag == "E_Projectile")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            Damage(hitprojectile.damage);
+            hitprojectile.DisableBullet();
+        }
+        else if (collision.gameObject.tag == "Explosive")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            Damage(hitprojectile.damage);
+            hitprojectile.ExplodeBullet();
+        }
+        else if (collision.gameObject.tag == "Exploded")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            Damage(hitprojectile.damage / 2f);
+        }
+    }
+    public void Damage(float damage)
+    {
+        health-=damage;
         if (health == 0)
         {
             gameObject.GetComponent<SpriteRenderer>().enabled = false;

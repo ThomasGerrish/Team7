@@ -79,22 +79,34 @@ public class PlayerScript : MonoBehaviour
         {
             if(myprojectile.bulletActive == false)
             {
-                myprojectile.ShootProjectile(gameObject, 4f);
+                myprojectile.ShootProjectile(gameObject, 1);
             }
         }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
+        if(other.gameObject.tag == "E_Projectile")
+        {
+            float damage = other.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>().damage;
+            lives -= damage;
+            if(lives <= 0)
+            {
+                lives = 0;
+                Time.timeScale = 0f;
+            }
+        }
         if (other.gameObject.name == "Speed Up")
         {
             speedUpTimer = speedUpTimerDef;
         }
+        /*
         if (other.gameObject.name == "Barrier Up")
         {
             barrierUp = true;
             GetComponent<BarrierScript>().Damage();
         }
+        */
     }
 
 

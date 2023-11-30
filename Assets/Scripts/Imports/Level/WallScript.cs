@@ -27,7 +27,11 @@ public class WallScript : MonoBehaviour
         {
             ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
             hitprojectile.DisableBullet();
-            Debug.Log("EnemyBullet");
+        }
+        if (collision.gameObject.tag == "Explosive")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            hitprojectile.DisableBullet();
         }
         if (collision.gameObject.tag == "Enemy")
         {

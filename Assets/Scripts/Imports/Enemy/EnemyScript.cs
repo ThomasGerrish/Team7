@@ -9,7 +9,11 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] float HP;
     [SerializeField] float moveSpeed;
     [SerializeField] float scorePoints;
+    public int shootingType;
+
+    [Header("References")]
     [SerializeField] LayerManager myManager;
+    [SerializeField] PlayerScript myPlayer;
 
     [Header("Spawn Properties")]
     [SerializeField] Vector3 mySpawn;
@@ -24,7 +28,7 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        myPlayer = FindObjectOfType<PlayerScript>();
     }
 
     // Update is called once per frame
@@ -44,7 +48,7 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    public void SpawnMe(Sprite mySprite, float speed)
+    public void SpawnMe(Sprite mySprite, float speed, int type)
     {
         alive = true;
         moveSpeed = speed;
@@ -52,6 +56,34 @@ public class EnemyScript : MonoBehaviour
         gameObject.transform.localPosition = mySpawn;
         myCollider.enabled = true;
         myRenderer.enabled = true;
+        if(type == 0)
+        {
+            scorePoints = 5;
+            HP = 1;
+            shootingType = 0;
+        }
+        else if(type == 1)
+        {
+            scorePoints = 10;
+            HP = 2;
+            shootingType = 1;
+        }
+        else if(type == 2)
+        {
+            scorePoints = 15;
+            HP = 3;
+            shootingType = 2;
+        }
+        else if(type == 3)
+        {
+            scorePoints = 20;
+            HP = 1;
+            shootingType = 3;
+        }
+        else if(type == 4)
+        {
+
+        }
         //gameObject.transform.localScale = myScale;
         //myManager.activeEnemies++;
     }
@@ -62,6 +94,7 @@ public class EnemyScript : MonoBehaviour
         HP = HP - damage;
         if(HP <= 0)
         {
+            myPlayer.points += scorePoints;
             myManager.activeEnemies--;
             alive = false;
             myRenderer.enabled = false;
@@ -79,6 +112,17 @@ public class EnemyScript : MonoBehaviour
             ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
             OnDamage(hitprojectile.damage);
             hitprojectile.DisableBullet();
+        }
+        else if(collision.gameObject.tag == "Explosive")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            OnDamage(hitprojectile.damage);
+            hitprojectile.ExplodeBullet();
+        }
+        else if(collision.gameObject.tag == "Exploded")
+        {
+            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+            OnDamage(hitprojectile.damage/2f);
         }
     }
     /*

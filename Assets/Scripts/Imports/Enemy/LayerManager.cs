@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class LayerManager : MonoBehaviour
 {
+    [Header("Enemy properties")]
     public List<GameObject> Enemies;
     [SerializeField] List<int> activeEnemyIndex;
     [SerializeField] List<Sprite> EnemySprites;
+
+    [Header("Projectile properties")]
     public List<ShooterProjectile> Projectiles;
-    public bool layerActive;
+    [SerializeField] float maxTime;
+    [SerializeField] float minTime;
 
     [Header("Level Management")]
     public int activeEnemies;
     public int maxBulletCount;
     public int bulletCount;
     [SerializeField] WaveController myController;
+    public bool layerActive;
 
     // Start is called before the first frame update
     void Start()
@@ -36,10 +41,22 @@ public class LayerManager : MonoBehaviour
     }
     IEnumerator ShootingTimer()
     {
+        Debug.Log("Starting shooting");
+        EnemyScript enemyClass;
+        bool skipTime = false;
+        float nextFire = 0;
         while (activeEnemies != 0)
         {
-            float nextFire = Random.Range(0f, 5f);
+            if (!skipTime)
+            {
+                nextFire = Random.Range(minTime,maxTime);
+            }
+            else
+            {
+                nextFire = 0f;
+            }
             yield return new WaitForSeconds(nextFire);
+            skipTime = false;
             if (bulletCount < maxBulletCount)
             {
                 //Search for active enemies and choose one
@@ -66,8 +83,14 @@ public class LayerManager : MonoBehaviour
                     }
                     i++;
                 }
+                enemyClass = Enemies[chosenEnemy].GetComponent<EnemyScript>();
+                if (enemyClass.shootingType == 0)
+                {
+                    skipTime = true;
+                    continue;
+                }
                 chosenShooter = i;
-                Projectiles[chosenShooter].ShootProjectile(Enemies[chosenEnemy], -4f);
+                Projectiles[chosenShooter].ShootProjectile(Enemies[chosenEnemy], enemyClass.shootingType);
                 bulletCount++;
             }
         }
@@ -93,11 +116,23 @@ public class LayerManager : MonoBehaviour
             activeEnemyIndex.Add(i);
         }
         layerActive = true;
-        StartCoroutine(ShootingTimer());
+        bool allBlanks = true;
+        foreach(var enemy in Enemies)
+        {
+            if (enemy.gameObject.GetComponent<EnemyScript>().shootingType != 0)
+            {
+                allBlanks = false;
+            }
+        }
+        if (!allBlanks)
+        {
+            StartCoroutine(ShootingTimer());
+        }
+
     }
     public void SpawnEnemy(int slot, int sprite, float speed)
     {
-        Enemies[slot].GetComponent<EnemyScript>().SpawnMe(EnemySprites[sprite], speed);
+        Enemies[slot].GetComponent<EnemyScript>().SpawnMe(EnemySprites[sprite], speed, sprite);
     }
 }
 

@@ -32,12 +32,12 @@ public class WaveController : MonoBehaviour
             foreach(var layers in myLayers)
             {
                 int pattern = Random.Range(0, combos.Count);
-                layers.Reload();
+                
                 for (int j = 0; j < 9; j++)
                 {
                     layers.SpawnEnemy(j, combos[pattern].pattern[j], 4f);
                 }
-
+                layers.Reload();
 
             }
         }

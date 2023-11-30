@@ -37,7 +37,7 @@ public class EnemyBulletScript : MonoBehaviour
             {
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                other.gameObject.GetComponent<BarrierScript>().Damage();
+                //other.gameObject.GetComponent<BarrierScript>().Damage();
                 Player.GetComponent<PlayerScript>().BulletHit();
                 hit = true;
             }
