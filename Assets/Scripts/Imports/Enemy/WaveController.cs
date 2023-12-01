@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class WaveController : MonoBehaviour
 {
     [SerializeField] List<PatternBase> combos;
     [SerializeField] List<LayerManager> myLayers;
+    [SerializeField] int wave;
+    [SerializeField] float waveSpeed;
+    [SerializeField] int projectileLimit;
+    [SerializeField] float shiftDown;
+    [SerializeField] TextMeshProUGUI waves;
     // Start is called before the first frame update
     void Start()
     {
+        wave = 0;
         CheckForEnd();
+        
     }
 
     // Update is called once per frame
@@ -28,18 +36,60 @@ public class WaveController : MonoBehaviour
             }
         }
         if(i == 5)
-        { 
-            foreach(var layers in myLayers)
+        {
+            wave++;
+            Debug.Log("Updating wave");
+            UpdateWave();
+            foreach (var layers in myLayers)
             {
+                layers.CooldownFunc();
                 int pattern = Random.Range(0, combos.Count);
                 
                 for (int j = 0; j < 9; j++)
                 {
-                    layers.SpawnEnemy(j, combos[pattern].pattern[j], 4f);
+                    layers.SpawnEnemy(j, combos[pattern].pattern[j], waveSpeed);
                 }
-                layers.Reload();
+                layers.maxBulletCount = projectileLimit;
+                layers.shiftDownRate = shiftDown;
 
+                layers.Reload();
+                
             }
+
+        }
+    }
+    //Difficulty Scaler, debate if want to change
+    void UpdateWave()
+    {
+        waves.text = "Wave: " + wave.ToString();
+        if(wave < 10)
+        {
+            waveSpeed += .2f;
+        }
+        else if (wave < 20)
+        {
+            waveSpeed += .3f;
+        }
+        else if(wave > 20)
+        {
+            waveSpeed = 6f;
+        }
+        if (wave == 5)
+        {
+            projectileLimit = 2;
+        }
+        else if( wave == 10)
+        {
+            shiftDown = 10f;
+        }
+        else if (wave == 15)
+        {
+            shiftDown = 7f;
+        }
+        else if(wave == 20)
+        {
+            projectileLimit = 3;
+            shiftDown = 5f;
         }
     }
 }

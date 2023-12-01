@@ -111,7 +111,7 @@ public class ShooterProjectile : MonoBehaviour
     public void ExplodeBullet()
     {
         projectileBody.tag = "Exploded";
-        projectileBody.gameObject.GetComponent<BoxCollider2D>().size = new Vector2(20f,10f);
+        projectileBody.gameObject.GetComponent<BoxCollider2D>().size = new Vector2(15f,3f);
         StartCoroutine(ExplosionTime(.05f));
     }
     IEnumerator ExplosionTime(float cooldown)

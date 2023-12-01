@@ -6,6 +6,7 @@ public class EnemyScript : MonoBehaviour
 {
     [Header("Enemy properties")]
     public bool alive;
+    public bool immortal;
     [SerializeField] float HP;
     [SerializeField] float moveSpeed;
     [SerializeField] float scorePoints;
@@ -34,7 +35,7 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (alive)
+        if (alive && !immortal)
         {
             gameObject.transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
         }
@@ -99,6 +100,7 @@ public class EnemyScript : MonoBehaviour
             alive = false;
             myRenderer.enabled = false;
             myCollider.enabled = false;
+            myManager.RefreshLifeList();
             if(myManager.activeEnemies == 0)
             {
                 myManager.ClearLayer();
@@ -107,23 +109,27 @@ public class EnemyScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Projectile")
+        if (!immortal)
         {
-            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
-            OnDamage(hitprojectile.damage);
-            hitprojectile.DisableBullet();
+            if (collision.gameObject.tag == "Projectile")
+            {
+                ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+                OnDamage(hitprojectile.damage);
+                hitprojectile.DisableBullet();
+            }
+            else if (collision.gameObject.tag == "Explosive")
+            {
+                ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+                OnDamage(hitprojectile.damage);
+                hitprojectile.ExplodeBullet();
+            }
+            else if (collision.gameObject.tag == "Exploded")
+            {
+                ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
+                OnDamage(hitprojectile.damage / 2f);
+            }
         }
-        else if(collision.gameObject.tag == "Explosive")
-        {
-            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
-            OnDamage(hitprojectile.damage);
-            hitprojectile.ExplodeBullet();
-        }
-        else if(collision.gameObject.tag == "Exploded")
-        {
-            ShooterProjectile hitprojectile = collision.gameObject.transform.parent.gameObject.GetComponent<ShooterProjectile>();
-            OnDamage(hitprojectile.damage/2f);
-        }
+        
     }
     /*
     IEnumerator ShootingTimer()

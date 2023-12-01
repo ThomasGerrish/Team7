@@ -8,6 +8,7 @@ public class LayerManager : MonoBehaviour
     public List<GameObject> Enemies;
     [SerializeField] List<int> activeEnemyIndex;
     [SerializeField] List<Sprite> EnemySprites;
+    [SerializeField] Vector3 spawnPos;
 
     [Header("Projectile properties")]
     public List<ShooterProjectile> Projectiles;
@@ -20,11 +21,12 @@ public class LayerManager : MonoBehaviour
     public int bulletCount;
     [SerializeField] WaveController myController;
     public bool layerActive;
+    public float shiftDownRate;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        spawnPos = gameObject.transform.position;
     }
 
     // Update is called once per frame
@@ -49,7 +51,7 @@ public class LayerManager : MonoBehaviour
         {
             if (!skipTime)
             {
-                nextFire = Random.Range(minTime,maxTime);
+                nextFire = Random.Range(minTime, maxTime);
             }
             else
             {
@@ -60,7 +62,9 @@ public class LayerManager : MonoBehaviour
             if (bulletCount < maxBulletCount)
             {
                 //Search for active enemies and choose one
+                /*
                 int i = 0;
+
                 foreach(var enemy in Enemies)
                 {
                     if (!enemy.GetComponent<EnemyScript>().alive)
@@ -69,13 +73,14 @@ public class LayerManager : MonoBehaviour
                     }
                     i++;
                 }
+                */
                 int chosenEnemy = Random.Range(0, activeEnemyIndex.Count - 1);
 
 
                 //Search for available shooter
                 int chosenShooter;
-                i = 0;
-                foreach(var shooter in Projectiles)
+                int i = 0;
+                foreach (var shooter in Projectiles)
                 {
                     if (!shooter.bulletActive)
                     {
@@ -95,6 +100,31 @@ public class LayerManager : MonoBehaviour
             }
         }
     }
+    IEnumerator ShiftDown()
+    {
+        while (activeEnemies != 0)
+        {
+            yield return new WaitForSeconds(shiftDownRate);
+            gameObject.transform.position = new Vector3(0, gameObject.transform.position.y - .2f, 0);
+            if(gameObject.transform.position.y <= -3f)
+            {
+                FindObjectOfType<IngameMenu>().GameOver();
+            }
+
+        }
+    }
+    public void RefreshLifeList()
+    {
+        int i = 0;
+        foreach (var enemy in Enemies)
+        {
+            if (!enemy.GetComponent<EnemyScript>().alive)
+            {
+                activeEnemyIndex.Remove(i);
+            }
+            i++;
+        }
+    }
     public void ClearLayer()
     {
         layerActive = false;
@@ -102,22 +132,37 @@ public class LayerManager : MonoBehaviour
     }
     public void Reload()
     {
-        /*
-        foreach(var enemy in Enemies)
-        {
-            enemy.GetComponent<EnemyScript>().SpawnMe(EnemySprites[0], 4f);
-            activeEnemies++;
-        }
-        */
+        gameObject.transform.position = spawnPos;
         activeEnemies = 9;
         activeEnemyIndex.Clear();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 9; i++)
         {
             activeEnemyIndex.Add(i);
         }
         layerActive = true;
-        bool allBlanks = true;
+    }
+    public void SpawnEnemy(int slot, int sprite, float speed)
+    {
+        Enemies[slot].GetComponent<EnemyScript>().SpawnMe(EnemySprites[sprite], speed, sprite);
+    }
+    public void CooldownFunc()
+    {
+        StartCoroutine(WaveCooldown());
+    }
+    IEnumerator WaveCooldown()
+    {
         foreach(var enemy in Enemies)
+        {
+            enemy.GetComponent<EnemyScript>().immortal = true;
+        }
+        yield return new WaitForSeconds(1f);
+        foreach (var enemy in Enemies)
+        {
+            enemy.GetComponent<EnemyScript>().immortal = false;
+        }
+        //continue normal process?
+        bool allBlanks = true;
+        foreach (var enemy in Enemies)
         {
             if (enemy.gameObject.GetComponent<EnemyScript>().shootingType != 0)
             {
@@ -128,11 +173,11 @@ public class LayerManager : MonoBehaviour
         {
             StartCoroutine(ShootingTimer());
         }
+        if (shiftDownRate != 0)
+        {
+            StartCoroutine(ShiftDown());
+        }
 
-    }
-    public void SpawnEnemy(int slot, int sprite, float speed)
-    {
-        Enemies[slot].GetComponent<EnemyScript>().SpawnMe(EnemySprites[sprite], speed, sprite);
     }
 }
 

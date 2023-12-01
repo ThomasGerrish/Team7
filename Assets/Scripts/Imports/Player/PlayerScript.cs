@@ -15,7 +15,7 @@ public class PlayerScript : MonoBehaviour
     public bool barrierUp;
     public float lives, points;
     TextMeshProUGUI Lives, Points;
-
+    [SerializeField] IngameMenu myMenus;
     [SerializeField]ShooterProjectile myprojectile;
 
     // Start is called before the first frame update
@@ -30,58 +30,62 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Scoreboard
-        Lives.text = "Lives: " + lives.ToString();
-        Points.text = "Points: " + points.ToString();
-
-
-        // Speed Powerup
-        speedUpTimer -= Time.deltaTime;
-        if (speedUpTimer > 0) speed = 7.5f;
-        else speed = defSpeed;
-
-
-        // Movement
-        movement = Input.GetAxis("Horizontal");
-
-        transform.Translate(movement * speed * Time.deltaTime, 0, 0);
-        if (transform.position.x >= 6.26772f) transform.position = new Vector2(6.26772f, transform.position.y);
-        if (transform.position.x <= -6.26772f) transform.position = new Vector2(-6.26772f, transform.position.y);
-
-        // Shooting
-        /*
-        if (Input.GetKey(KeyCode.Space)) shooting = true;
-        else shooting = false;
-        if (shooting && canShoot)
+        if (!myMenus.paused)
         {
-            canShoot = false;
+            // Scoreboard
+            Lives.text = "HP: " + lives.ToString();
+            Points.text = "Points: " + points.ToString();
 
-            if (bulletCycle == 1)
+
+            // Speed Powerup
+            speedUpTimer -= Time.deltaTime;
+            if (speedUpTimer > 0) speed = 7.5f;
+            else speed = defSpeed;
+
+
+            // Movement
+            movement = Input.GetAxis("Horizontal");
+
+            transform.Translate(movement * speed * Time.deltaTime, 0, 0);
+            if (transform.position.x >= 6.26772f) transform.position = new Vector2(6.26772f, transform.position.y);
+            if (transform.position.x <= -6.26772f) transform.position = new Vector2(-6.26772f, transform.position.y);
+
+            // Shooting
+            /*
+            if (Input.GetKey(KeyCode.Space)) shooting = true;
+            else shooting = false;
+            if (shooting && canShoot)
             {
-                Bullet1.GetComponent<BulletScript>().ShootTrigger();
-                bulletCycle++;
+                canShoot = false;
+
+                if (bulletCycle == 1)
+                {
+                    Bullet1.GetComponent<BulletScript>().ShootTrigger();
+                    bulletCycle++;
+                }
+                else if (bulletCycle == 2)
+                {
+                    Bullet2.GetComponent<BulletScript>().ShootTrigger();
+                    bulletCycle++;
+                }
+                else if (bulletCycle == 3)
+                {
+                    Bullet3.GetComponent<BulletScript>().ShootTrigger();
+                    bulletCycle = 1;
+                }
             }
-            else if (bulletCycle == 2)
+            */
+
+            //Refactored shooting
+            if (Input.GetKey(KeyCode.Space))
             {
-                Bullet2.GetComponent<BulletScript>().ShootTrigger();
-                bulletCycle++;
-            }
-            else if (bulletCycle == 3)
-            {
-                Bullet3.GetComponent<BulletScript>().ShootTrigger();
-                bulletCycle = 1;
+                if (myprojectile.bulletActive == false)
+                {
+                    myprojectile.ShootProjectile(gameObject, 1);
+                }
             }
         }
-        */
 
-        //Refactored shooting
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if(myprojectile.bulletActive == false)
-            {
-                myprojectile.ShootProjectile(gameObject, 1);
-            }
-        }
     }
 
     public void OnTriggerEnter2D(Collider2D other)
@@ -93,7 +97,7 @@ public class PlayerScript : MonoBehaviour
             if(lives <= 0)
             {
                 lives = 0;
-                Time.timeScale = 0f;
+                myMenus.GameOver();
             }
         }
         if (other.gameObject.name == "Speed Up")
