@@ -8,6 +8,7 @@ public class PlayerScript : MonoBehaviour
     public float defSpeed = 5;
     public bool canShoot = true;
     public int bulletCycle = 1;
+    [SerializeField] int bulletType;
     //public GameObject Bullet1, Bullet2, Bullet3;
     public float movement;
     //bool shooting;
@@ -81,7 +82,7 @@ public class PlayerScript : MonoBehaviour
             {
                 if (myprojectile.bulletActive == false)
                 {
-                    myprojectile.ShootProjectile(gameObject, 1);
+                    myprojectile.ShootProjectile(gameObject, bulletType);
                 }
             }
         }
