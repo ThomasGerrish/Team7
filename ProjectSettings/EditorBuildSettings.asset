@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 596b435ae084598479f0e4c2df9e8d3d
+  - enabled: 1
+    path: Assets/Scenes/Timed Massacre.unity
+    guid: ea125e7cc6eb8a44cb68291b260ed2d2
   m_configObjects: {}
