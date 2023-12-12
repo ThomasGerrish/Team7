@@ -26,7 +26,7 @@ public class LayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spawnPos = gameObject.transform.position;
+        //spawnPos = gameObject.transform.position;
     }
 
     // Update is called once per frame

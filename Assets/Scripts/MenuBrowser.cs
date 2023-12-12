@@ -56,7 +56,6 @@ public class MenuBrowser : MonoBehaviour
         transform.parent.parent.gameObject.SetActive(false);
         settingsMenu.SetActive(true);
     }
-
     public void LoadTimedMassacre()
     {
         SceneManager.LoadScene("Scenes/Timed Massacre");

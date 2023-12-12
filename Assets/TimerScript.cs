@@ -5,9 +5,10 @@ using TMPro;
 
 public class TimerScript : MonoBehaviour
 {
-    [SerializeField] float currentTime;
+    public float currentTime;
     [SerializeField] float startingTime;
     [SerializeField] TextMeshProUGUI timerDisplay;
+    [SerializeField] IngameMenu myGameManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,11 +21,14 @@ public class TimerScript : MonoBehaviour
         if (currentTime > 0)
         {
             currentTime -= 1f * Time.deltaTime;
-            timerDisplay.text = "0:" + currentTime.ToString("0");
         }
         else if(currentTime <= 0)
         {
             currentTime = 0f;
+            myGameManager.GameOver();
         }
+        int minutes = Mathf.FloorToInt(currentTime / 60);
+        int seconds = Mathf.FloorToInt(currentTime % 60);
+        timerDisplay.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }

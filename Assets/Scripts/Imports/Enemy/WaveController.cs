@@ -12,6 +12,8 @@ public class WaveController : MonoBehaviour
     [SerializeField] int projectileLimit;
     [SerializeField] float shiftDown;
     [SerializeField] TextMeshProUGUI waves;
+    [SerializeField] bool timedMode;
+    [SerializeField] TimerScript myTimer;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,7 +63,14 @@ public class WaveController : MonoBehaviour
     //Difficulty Scaler, debate if want to change
     void UpdateWave()
     {
-        waves.text = "Wave: " + wave.ToString();
+        if (timedMode)
+        {
+            myTimer.currentTime += 30f;
+        }
+        if(waves != null)
+        {
+            waves.text = "Wave: " + wave.ToString();
+        }
         if(wave < 10)
         {
             waveSpeed += .2f;

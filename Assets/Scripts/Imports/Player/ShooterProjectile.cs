@@ -86,13 +86,15 @@ public class ShooterProjectile : MonoBehaviour
             {
                 speed = 6f;
                 projectileBody.transform.tag = "Projectile";
+                damage = 1f;
             }
             else
             {
                 speed = -6f;
                 projectileBody.transform.tag = "E_Projectile";
+                damage = .5f;
             }
-            damage = .5f;
+            
             bulletActive = true;
         }
         else if (projectileType == 4)

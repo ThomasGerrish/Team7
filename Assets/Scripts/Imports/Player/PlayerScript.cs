@@ -15,16 +15,15 @@ public class PlayerScript : MonoBehaviour
     float speed, speedUpTimer, speedUpTimerDef;
     public bool barrierUp;
     public float lives, points;
-    TextMeshProUGUI Lives, Points;
     [SerializeField] IngameMenu myMenus;
     [SerializeField]ShooterProjectile myprojectile;
+    [SerializeField] TextMeshProUGUI livesText;
+    [SerializeField] TextMeshProUGUI pointsText;
 
     // Start is called before the first frame update
     void Start()
     {
         // Maximum movement x is 6.26772
-        Lives = GameObject.Find("Lives Text").GetComponent<TextMeshProUGUI>();
-        Points = GameObject.Find("Points Text").GetComponent<TextMeshProUGUI>();
         lives = 3;
     }
 
@@ -34,8 +33,15 @@ public class PlayerScript : MonoBehaviour
         if (!myMenus.paused)
         {
             // Scoreboard
-            Lives.text = "HP: " + lives.ToString();
-            Points.text = "Points: " + points.ToString();
+            if(livesText != null)
+            {
+                livesText.text = "HP: " + lives.ToString();
+            }
+            if (pointsText.text != null)
+            {
+                pointsText.text = "Points: " + points.ToString();
+            } 
+
 
 
             // Speed Powerup
@@ -98,6 +104,7 @@ public class PlayerScript : MonoBehaviour
             if(lives <= 0)
             {
                 lives = 0;
+                livesText.text = "HP: " + lives.ToString();
                 myMenus.GameOver();
             }
         }
