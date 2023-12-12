@@ -6,27 +6,28 @@ using UnityEngine.SceneManagement;
 
 public class CockIntroScript : MonoBehaviour
 {
-    private float _timer = 0f;
-    
-    // Start is called before the first frame update
-    void Start()
+    // private float _timer = 0f;
+
+    private void Awake()
     {
-        
+        StartCoroutine(WaitAndLoadMainMenu());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator WaitAndLoadMainMenu()
     {
-        
+        yield return new WaitForSeconds(7);
+        SceneManager.LoadScene("MainMenu");
     }
 
+    /*
     private void FixedUpdate()
     {
         _timer += Time.deltaTime;
 
         if (_timer >= 7f)
         {
-            SceneManager.LoadScene("Scenes/Main Menu");
+            SceneManager.LoadScene("Scenes/MainMenu");
         }
     }
+    */
 }
